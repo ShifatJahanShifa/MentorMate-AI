@@ -489,6 +489,9 @@ def main():
     st.title("Chat with AI")
     st.subheader("Talk to Jack, your AI assistant!")
 
+    with st.sidebar:
+        st.markdown("[Back](http://localhost:4000)")
+
     # Callback for audio input
     if st.button("Speak"):
         st.write("Listening...")
