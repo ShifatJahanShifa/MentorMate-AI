@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+sqlmodel
+pydantic
+python-multipart
+transformers
+langchain
+speechrecognition
+gtts
+google-api-python-client
