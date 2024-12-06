@@ -76,7 +76,7 @@
   }
 
   .text-col {
-    @apply text-[#de7f45];
+    @apply text-[#de755a];
   }
 
   @keyframes fadeIn {

@@ -1,5 +1,5 @@
 
-import { dine_24,dine_25,dine_26,dine_27 } from "../images";
+import { dine_24,dine_25,dine_26,dine_27,bill1 ,s11,s22,s33,s4} from "../images";
 
 export const navLinks = [
     { href: "/", label: "Home" },
@@ -8,10 +8,10 @@ export const navLinks = [
 ];
 
 export const categories = [
-    { name: "cake", link: "/category/cake", image: dine_24 },
-    { name: "Dishes", link: "/category/dishes", image: dine_25 },
-    { name: "Catered Cuisine ", link: "/category/cater", image: dine_26 },
-    { name: "Frozen Items", link: "/category/frozen", image: dine_27 },
+    { name: "Chemistry", link: "/category/chemistry", image: s11 },
+    { name: "Biology", link: "/category/biology", image: s22 },
+    { name: "Physics ", link: "/category/physics", image: s33 },
+    { name: "ICT", link: "/category/ict", image: s4 },
 ];
 
 // food.js (or in your CategoryCard component file)

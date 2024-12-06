@@ -5,7 +5,14 @@ import dine_26 from './dine_26.jpg'
 import dine_27 from './dine_27.jpg'
 import d1 from './d1.png'
 import cake_bill from './cake_billboard.png'
+import bill1 from './bill1.png'
+import a from './a.png'
+import b from './b.png'
+import c from './c.png'
+import s11 from './s11.jpg'
+import s22 from './s22.jpg'
+import s33 from './s33.jpg'
+import s4 from './s4.jpg'
+import bill2 from './bill2.png'
 
-
-
-export { headerLogo, dine_24, dine_25, dine_26, dine_27,d1, cake_bill }
+export { headerLogo, b,c, dine_24, dine_25, dine_26, dine_27,d1, cake_bill ,bill1,a, s11, s22, s33,s4 ,bill2}

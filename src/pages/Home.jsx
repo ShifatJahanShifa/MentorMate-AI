@@ -2,7 +2,7 @@ import WideCarousel from "../components/Carousel/WideCarousel";
 import CategoryCard from "../components/Cards/CategoryCard";
 import { useScrollReveal } from "../utils/useScrollReveal";
 import { categories } from "../assets/constants";
-import { dine_24, d1 } from "../assets/images";
+import { dine_24, d1, bill2 } from "../assets/images";
 import GenButton from "../components/Buttons/GenButton";
 
 const Home = () => {
@@ -18,7 +18,7 @@ const Home = () => {
         </div>
         <div className="slide-left">
           <h1 className="flex mb-5 text-col xl:flex-row flex-col justify-center items-center font-palanquin lg:text-3xl sm:text-xl lg:leading-[30px] xl:leading-[40px] lg:pt-10 z-10 sm:pt-20 font-bold text-col slow-fade-in title-bold">
-            Explore Our Delicious Categories
+            Select Your Field of Interest
           </h1>
         </div>
         <div className="center max-container w-4/5 mx-auto mt-[5rem] fade-in-manual opacity-0">
@@ -30,16 +30,16 @@ const Home = () => {
       </div>
       <div className="relative w-full h-[30rem] mt-[3rem] slide-left slow-fade-in">
         <img
-          src={d1}
+          src={bill2}
           className="w-full h-full "
           alt="Descriptive text"
         />
-        <div className="absolute inset-0 flex justify-center items-end mb-[2rem]">
+        <div className="absolute inset-0 flex justify-center items-end mb-[-2rem] pt-[2rem]">
           <GenButton
-            text="Subscribe to Newsletter"
+            text="Get Premium"
             bgColor="bg-black"
             textColor="text-white"
-            size="py-3 px-8"
+            size="py-3 px-8 "
             borderRadius="rounded-lg"
             onClick={() => console.log("Learning more!")}
           />

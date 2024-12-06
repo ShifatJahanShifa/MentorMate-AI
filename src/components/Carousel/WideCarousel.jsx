@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { dine_24, dine_25, dine_26, dine_27 } from '../../assets/images';
+import { a,b,c, bill1, dine_24, dine_25, dine_26, dine_27 } from '../../assets/images';
 
 const WideCarousel = () => {
-  const images = [dine_24, dine_25, dine_26, dine_27];
+  const images = [a, b,c];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual changes
 
@@ -33,7 +33,7 @@ const WideCarousel = () => {
 
   return (
     <div id="default-carousel" className="relative w-full">
-      <div className="relative h-56 overflow-hidden   md:h-96">
+      <div className="relative h-64 overflow-hidden   md:h-96">
         {images.map((image, index) => (
           <div
             key={index}
@@ -43,7 +43,7 @@ const WideCarousel = () => {
           >
             <img
               src={image}
-              className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+              className="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
               alt={`Slide ${index + 1}`}
             />
           </div>
