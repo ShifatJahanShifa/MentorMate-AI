@@ -18,10 +18,10 @@ const Nav = () => {
         {/* Logo on the left */}
         <a href="/">
           <img
-            src='ff.svg'
+            src='ai.png'
             alt="logo"
-            width={50}
-            height={50}
+            width={230}
+            height={230}
             className="flex-shrink-0"
           />
         </a>
