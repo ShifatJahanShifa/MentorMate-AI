@@ -5,11 +5,12 @@ export const navLinks = [
     { href: "/", label: "Home" },
     { href: "/newsletter", label: "Newsletter" },
     { href: "/login", label: "Login" },
+    { href: "/profile", label: "Profile" },
 ];
 
 export const categories = [
-    { name: "Chemistry", link: "/category/chemistry", image: s11 },
-    { name: "Biology", link: "/category/biology", image: s22 },
+    { name: "Chemistry", link: "/category/chemistry", image: s11},
+    { name: "Biology", link: "/category/biology", image: s22},
     { name: "Physics ", link: "/category/physics", image: s33 },
     { name: "ICT", link: "/category/ict", image: s4 },
 ];

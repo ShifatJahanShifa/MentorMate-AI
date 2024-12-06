@@ -1,27 +1,26 @@
 import React, { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { CO2, CH4, Fluorinates, IntroEdu } from "./index";
-import { VideoPlayer, useScrollReveal } from "@/components";
+import { Books } from "./index";
+import { useScrollReveal } from "../utils/useScrollReveal";
 
-const Education = () => {
+const CategoryDetail = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(null);
-  useScrollReveal();
+  useScrollReveal;
 
   const renderComponent = () => {
     console.log("selectedOption", selectedOption);
     switch (selectedOption) {
-      case "CO2":
-        return <CO2 />;
-      case "CH4":
-        return <CH4 />;
-      case "Fluorinates":
-        return <Fluorinates />;
-      case "VideoPlayer":
-        return <VideoPlayer />;
-
-      default:
-        return <VideoPlayer />;
+      case "Books":
+        //   return <Books />;
+        // case "CH4":
+        //   return <CH4 />;
+        // case "Fluorinates":
+        //   return <Fluorinates />;
+        // case "VideoPlayer":
+        //   return <VideoPlayer />;
+        default:
+          return <Books />;
     }
   };
 
@@ -29,9 +28,14 @@ const Education = () => {
     setOpenDropdown((prevOption) => (prevOption === option ? null : option));
   };
 
+  const handleIconClick = (iconType) => {
+    console.log(`Icon clicked: ${iconType}`);
+    // Add specific logic here for each icon type
+  };
+
   return (
     <div
-      className="flex min-h-screen "
+      className="flex min-h-screen"
       style={{
         backgroundImage: 'url("bg.jpg")',
         backgroundPosition: "center",
@@ -40,24 +44,8 @@ const Education = () => {
         backgroundSize: "cover",
       }}
     >
-      <a
-        className="fixed left-0 z-10 bg-[#7e9156] hover:bg-[#A1B770] text-white"
-        data-bs-toggle="offcanvas"
-        href="#offcanvasExample"
-        role="button"
-        aria-controls="offcanvasExample"
-        style={{
-          top: "85px",
-          width: "auto",
-          padding: "10px 0px 10px 0px",
-          borderRadius: "0px 10px 10px 0px",
-          writingMode: "vertical-lr",
-        }}
-      >
-        View SideBar
-      </a>
       <aside
-        className="bg-[#A1B770] text-white w-64 p-4 offcanvas offcanvas-start"
+        className="bg-[#de755a] text-white w-64 p-4 offcanvas offcanvas-start"
         tabIndex="-1"
         id="offcanvasExample"
         aria-labelledby="offcanvasExampleLabel"
@@ -66,7 +54,7 @@ const Education = () => {
           <ul className="space-y-2">
             <li className="opcion-con-desplegable">
               <div
-                className="flex items-center justify-between p-2 hover:bg-[#B2C48C] cursor-pointer"
+                className="flex items-center justify-between p-2 hover:bg-[#e09a82] cursor-pointer"
                 onClick={() => toggleDropdown("contabilidad")}
               >
                 <div className="flex items-center">
@@ -82,7 +70,7 @@ const Education = () => {
               {openDropdown === "contabilidad" && (
                 <ul className="ml-4">
                   <li
-                    className="block p-2 hover:bg-[#B2C48C] cursor-pointer"
+                    className="block p-2 hover:bg-[#e09a82] cursor-pointer"
                     onClick={() => setSelectedOption("VideoPlayer")}
                   >
                     What is Green House Effect?
@@ -93,7 +81,7 @@ const Education = () => {
 
             <li className="opcion-con-desplegable">
               <div
-                className="flex items-center justify-between p-2 hover:bg-[#B2C48C] cursor-pointer"
+                className="flex items-center justify-between p-2 hover:bg-[#e09a82] cursor-pointer"
                 onClick={() => toggleDropdown("agenda")}
               >
                 <div className="flex items-center">
@@ -109,19 +97,19 @@ const Education = () => {
               {openDropdown === "agenda" && (
                 <ul className="ml-4">
                   <li
-                    className="block p-2 hover:bg-[#B2C48C] cursor-pointer"
+                    className="block p-2 hover:bg-[#e09a82] cursor-pointer"
                     onClick={() => setSelectedOption("CO2")}
                   >
                     Carbon Dioxide
                   </li>
                   <li
-                    className="block p-2 hover:bg-[#B2C48C] cursor-pointer"
+                    className="block p-2 hover:bg-[#e09a82] cursor-pointer"
                     onClick={() => setSelectedOption("CH4")}
                   >
                     Methane
                   </li>
                   <li
-                    className="block p-2 hover:bg-[#B2C48C] cursor-pointer"
+                    className="block p-2 hover:bg-[#e09a82] cursor-pointer"
                     onClick={() => setSelectedOption("Fluorinates")}
                   >
                     Fluorinates
@@ -133,11 +121,31 @@ const Education = () => {
         </nav>
       </aside>
 
-      <main className="flex-1 min-h-screen overflow-hidden">
-        {renderComponent()}
-      </main>
+      <main className="flex-1 min-h-screen overflow-hidden">{renderComponent()}</main>
+
+      {/* Fixed Circular Icons */}
+      <div className="fixed bottom-4 right-4 flex flex-col space-y-4">
+        <button
+          className="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg hover:bg-blue-600 transition duration-200"
+          onClick={() => handleIconClick("icon1")}
+        >
+          <i className="fas fa-info"></i>
+        </button>
+        <button
+          className="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg hover:bg-green-600 transition duration-200"
+          onClick={() => handleIconClick("icon2")}
+        >
+          <i className="fas fa-question"></i>
+        </button>
+        <button
+          className="w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg hover:bg-red-600 transition duration-200"
+          onClick={() => handleIconClick("icon3")}
+        >
+          <i className="fas fa-cog"></i>
+        </button>
+      </div>
     </div>
   );
 };
 
-export default Education;
+export default CategoryDetail;
