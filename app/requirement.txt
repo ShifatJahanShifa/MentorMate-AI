@@ -8,3 +8,4 @@ transformers
 langchain
 speechrecognition
 gtts
+google-api-python-client
