@@ -1,15 +1,17 @@
 from fastapi import FastAPI, File, UploadFile
 from googleapiclient.discovery import build
-from typing import List
+from typing import List, Optional
 import os
 from fastapi.responses import FileResponse
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Query
 from schema import Base, Subject, Topic, Subtopic, ReadingResource  # Import models
 from fastapi import HTTPException
 import shutil
 from cors import configure_cors
+from sqlalchemy import func
+from fastapi.responses import RedirectResponse 
 
 
 DATABASE_URL = "sqlite:///./test.db"  # SQLite database file
@@ -378,3 +380,184 @@ async def delete_reading_resource(reading_resource_id: int, db: SessionLocal = D
     db.commit()
 
     return {"message": f"ReadingResource {reading_resource_id} deleted successfully"}
+
+@app.get("/subjects/")
+async def get_subject(
+    id: Optional[int] = None, 
+    name: Optional[str] = None, 
+    db: SessionLocal = Depends(get_db)
+):
+    """
+    Get a subject by ID or name.
+    If both are provided, it will prioritize ID first.
+    """
+    if id:
+        subject = db.query(Subject).filter(Subject.id == id).first()
+        if not subject:
+            raise HTTPException(status_code=404, detail="Subject not found with the given ID")
+        return {"id": subject.id, "name": subject.name, "image": subject.image}
+
+    if name:
+        subject = db.query(Subject).filter(Subject.name == name).first()
+        if not subject:
+            raise HTTPException(status_code=404, detail="Subject not found with the given name")
+        return {"id": subject.id, "name": subject.name, "image": subject.image}
+
+    raise HTTPException(
+        status_code=400, 
+        detail="You must provide either an 'id' or a 'name' to search for a subject"
+    )
+
+@app.get("/allSubjects/")
+async def get_all_subjects(
+    page: int = Query(1, ge=1, description="Page number, starting from 1"),
+    db: SessionLocal = Depends(get_db)
+):
+    """
+    Get all subjects, paginated by 6 per page.
+    """
+    page_size = 6  # Number of subjects per page
+    offset = (page - 1) * page_size
+
+    # Query total count of subjects
+    total_subjects = db.query(func.count(Subject.id)).scalar()
+    if total_subjects == 0:
+        raise HTTPException(status_code=404, detail="No subjects found")
+
+    # Query the subjects with pagination
+    subjects = db.query(Subject).offset(offset).limit(page_size).all()
+
+    return {
+        "page": page,
+        "total_pages": (total_subjects + page_size - 1) // page_size,
+        "total_subjects": total_subjects,
+        "subjects": [
+            {"id": subject.id, "name": subject.name, "image": subject.image}
+            for subject in subjects
+        ],
+    }
+
+@app.get("/topics/")
+async def get_topics_for_subject(
+    subject_id: int, db: SessionLocal = Depends(get_db)
+):
+    """
+    Get all topics for a specific subject, sorted by ID.
+    """
+    # Fetch topics for the given subject ID
+    topics = db.query(Topic).filter(Topic.subject_id == subject_id).order_by(Topic.id).all()
+
+    if not topics:
+        raise HTTPException(status_code=404, detail="No topics found for the given subject")
+
+    return {
+        "subject_id": subject_id,
+        "topics": [{"id": topic.id, "name": topic.name} for topic in topics],
+    }
+
+
+@app.get("/search/")
+async def search_topics_and_subtopics(
+    name: str, db: SessionLocal = Depends(get_db)
+):
+    """
+    Search for topics and subtopics by name, sorted by ID.
+    """
+    # Search for matching topics
+    topics = (
+        db.query(Topic)
+        .filter(Topic.name.ilike(f"%{name}%"))
+        .order_by(Topic.id)
+        .all()
+    )
+
+    # Search for matching subtopics
+    subtopics = (
+        db.query(Subtopic)
+        .filter(Subtopic.name.ilike(f"%{name}%"))
+        .order_by(Subtopic.id)
+        .all()
+    )
+
+    if not topics and not subtopics:
+        raise HTTPException(status_code=404, detail="No topics or subtopics found with the given name")
+
+    return {
+        "search_query": name,
+        "topics": [{"id": topic.id, "name": topic.name, "subject_id": topic.subject_id} for topic in topics],
+        "subtopics": [{"id": subtopic.id, "name": subtopic.name, "topic_id": subtopic.topic_id} for subtopic in subtopics],
+    }
+
+@app.get("/subtopics/{topic_id}")
+async def get_subtopics_by_topic_id(topic_id: int, db: SessionLocal = Depends(get_db)):
+    """
+    Get all subtopics for a given topic ID, sorted by ID.
+    """
+    # Query the database for subtopics with the given topic ID
+    subtopics = (
+        db.query(Subtopic)
+        .filter(Subtopic.topic_id == topic_id)
+        .order_by(Subtopic.id)
+        .all()
+    )
+
+    # If no subtopics are found, raise a 404 error
+    if not subtopics:
+        raise HTTPException(status_code=404, detail="No subtopics found for the given topic ID")
+
+    # Return the subtopics
+    return {
+        "topic_id": topic_id,
+        "subtopics": [{"id": subtopic.id, "name": subtopic.name} for subtopic in subtopics],
+    }
+
+@app.get("/reading-resources/")
+async def get_reading_resources(
+    topic_id: int = Query(None), 
+    resource_type: str = Query(None), 
+    db: SessionLocal = Depends(get_db)
+):
+    """
+    Get reading resources filtered by topic_id, resource_type, or both.
+    """
+    # Build the query dynamically based on the provided filters
+    query = db.query(ReadingResource)
+
+    if topic_id:
+        query = query.filter(ReadingResource.topic_id == topic_id)
+
+    if resource_type:
+        query = query.filter(ReadingResource.type.ilike(resource_type))
+
+    # Execute the query and fetch results
+    resources = query.all()
+
+    # If no resources are found, return 404
+    if not resources:
+        raise HTTPException(status_code=404, detail="No reading resources found for the given criteria")
+
+    # Return the resources
+    return [
+        {
+            "id": resource.id,
+            "name": resource.name,
+            "type": resource.type,
+            "url": resource.url,
+            "topic_id": resource.topic_id,
+        }
+        for resource in resources
+    ]
+
+@app.get("/chatbot")
+async def chatbot():
+    return RedirectResponse(url="http://localhost:8501") 
+
+@app.get("/pdf")
+async def pdf():
+    return RedirectResponse(url="http://localhost:8502")
+
+
+@app.get("/aivoice")
+async def pdf():
+    # Redirect to the Streamlit app
+    return RedirectResponse(url="http://localhost:8503")

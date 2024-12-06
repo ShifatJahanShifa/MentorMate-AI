@@ -15,7 +15,7 @@ class Subject(Base):
     image = Column(String)  # You can store the image URL or file path
     
     # Relationship with Topic
-    topics = relationship("Topic", back_populates="subject")
+    topics = relationship("Topic", back_populates="subject",cascade="all,delete-orphan")
 
 # Topic model
 class Topic(Base):
@@ -29,8 +29,8 @@ class Topic(Base):
     subject = relationship("Subject", back_populates="topics")
     
     # Relationship with Subtopic and ReadingResource
-    subtopics = relationship("Subtopic", back_populates="topic")
-    reading_resources = relationship("ReadingResource", back_populates="topic")
+    subtopics = relationship("Subtopic", back_populates="topic",cascade="all,delete-orphan")
+    reading_resources = relationship("ReadingResource", back_populates="topic",cascade="all,delete-orphan")
 
 # Subtopic model
 class Subtopic(Base):
