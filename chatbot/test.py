@@ -10,7 +10,7 @@ load_dotenv()
 
 # Configure Streamlit page settings
 st.set_page_config(
-    page_title="Chat with Gemini-Pro!",
+    page_title="Chat with Your AI Assistant",
     page_icon=":brain:",  # Favicon emoji
     layout="centered",  # Page layout option
 )
@@ -34,9 +34,13 @@ def translate_role_for_streamlit(user_role):
 if "chat_session" not in st.session_state:
     st.session_state.chat_session = model.start_chat(history=[])
 
+with st.sidebar:
+    # if st.button("Go to FastAPI App"):
+        st.markdown("[Back](http://localhost:4000)")
+
 
 # Display the chatbot's title on the page
-st.title("🤖 Gemini Pro - ChatBot")
+st.title("🤖 Chat With Your AI Assistant")
 
 # Display the chat history
 for message in st.session_state.chat_session.history:
@@ -55,3 +59,18 @@ if user_prompt:
     # Display Gemini-Pro's response
     with st.chat_message("assistant"):
         st.markdown(gemini_response.text)
+
+
+# st.markdown("""
+# <style>
+# .stButton {
+#   position: absolute;
+#   top: 10px;
+#   left: 10px;
+# }
+# </style>
+# """, unsafe_allow_html=True)
+
+
+# if st.button("Go to FastAPI App", className="stButton"):
+#     st.markdown("[Click here to return to FastAPI](http://localhost:4000)")

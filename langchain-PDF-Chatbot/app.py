@@ -56,12 +56,21 @@ def user_input(user_question):
     embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
     new_db=FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
-    docs=new_db.similarity_search(user_question)
+    docs=new_db.similarity_search_with_score(user_question)
 
+    similarity_threshold = 0.6
+
+    # Filter documents based on the threshold
+    filtered_docs = [doc for doc, score in docs if score >= similarity_threshold]
+
+    if not filtered_docs:
+        st.write("No relevant information found in the PDF for your question.")
+        return
+    
     chain=get_conversational_chain()
 
     response=chain(
-        {"input_documents":docs,
+        {"input_documents":filtered_docs,
          "question": user_question}
          , return_only_outputs=True)
     
@@ -71,7 +80,7 @@ def user_input(user_question):
 
 def main():
     st.set_page_config("Chat PDF")
-    st.header("Chat with PDF using Gemini🧑‍🏫")
+    st.header("Chat With PDF🧑‍🏫")
 
     user_question = st.text_input("Ask a Question from the PDF Files")
 
@@ -86,7 +95,9 @@ def main():
                 raw_text = get_pdf_text(pdf_docs)
                 text_chunks = get_text_chunks(raw_text)
                 get_vector_store(text_chunks)
-                st.success("Done")
+                st.success("Done") 
+        
+        st.markdown("[Back](http://localhost:4000)")
 
 
 
