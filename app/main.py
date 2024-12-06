@@ -9,6 +9,7 @@ from fastapi import FastAPI, Depends
 from schema import Base, Subject, Topic, Subtopic, ReadingResource  # Import models
 from fastapi import HTTPException
 import shutil
+from cors import configure_cors
 
 
 DATABASE_URL = "sqlite:///./test.db"  # SQLite database file
@@ -21,6 +22,9 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create FastAPI app
 app = FastAPI()
+# Apply the CORS middleware to the app
+configure_cors(app)
+
 
 # Dependency to get the DB session
 def get_db():
@@ -295,3 +299,82 @@ async def delete_subtopic(subtopic_id: int, db: SessionLocal = Depends(get_db)):
     db.commit()
 
     return {"message": f"Subtopic {subtopic_id} deleted successfully"}
+
+
+@app.post("/reading_resources/")
+async def create_reading_resource(name: str, type: str, url: str = None, file: UploadFile = File(None), topic_id: int = 0, db: SessionLocal = Depends(get_db)):
+    # Check if the topic exists
+    db_topic = db.query(Topic).filter(Topic.id == topic_id).first()
+    if not db_topic:
+        raise HTTPException(status_code=404, detail="Topic not found")
+
+    # If a file is provided, upload it and get the URL
+    if file:
+        try:
+            filename = upload_file(file)
+            file_url = filename
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Error uploading file: {str(e)}")
+    elif url:
+        # If no file is uploaded, use the provided URL
+        file_url = url
+    else:
+        raise HTTPException(status_code=400, detail="Either file or URL must be provided")
+
+    # Create new ReadingResource and add to DB
+    db_reading_resource = ReadingResource(name=name, type=type, url=file_url, topic_id=topic_id)
+    db.add(db_reading_resource)
+    db.commit()
+    db.refresh(db_reading_resource)
+
+    return {"id": db_reading_resource.id, "name": db_reading_resource.name, "type": db_reading_resource.type, "url": db_reading_resource.url, "topic_id": db_reading_resource.topic_id}
+
+# Endpoint to update a ReadingResource
+@app.put("/reading_resources/{reading_resource_id}")
+async def update_reading_resource(reading_resource_id: int, name: str = None, type: str = None, url: str = None, file: UploadFile = File(None), topic_id: int = None, db: SessionLocal = Depends(get_db)):
+    # Get the reading resource from the database
+    db_reading_resource = db.query(ReadingResource).filter(ReadingResource.id == reading_resource_id).first()
+    if not db_reading_resource:
+        raise HTTPException(status_code=404, detail="ReadingResource not found")
+
+    # Update fields if provided
+    if name:
+        db_reading_resource.name = name
+    if type:
+        db_reading_resource.type = type
+    if url:
+        db_reading_resource.url = url
+    if file:
+        try:
+            # Save the new file and update the URL
+            filename = upload_file(file)
+            file_url = filename
+            db_reading_resource.url = file_url
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Error uploading file: {str(e)}")
+    if topic_id:
+        # Check if the new topic exists
+        db_topic = db.query(Topic).filter(Topic.id == topic_id).first()
+        if not db_topic:
+            raise HTTPException(status_code=404, detail="Topic not found")
+        db_reading_resource.topic_id = topic_id
+
+    # Commit the changes to the database
+    db.commit()
+    db.refresh(db_reading_resource)
+
+    return {"id": db_reading_resource.id, "name": db_reading_resource.name, "type": db_reading_resource.type, "url": db_reading_resource.url, "topic_id": db_reading_resource.topic_id}
+
+# Endpoint to delete a ReadingResource
+@app.delete("/reading_resources/{reading_resource_id}")
+async def delete_reading_resource(reading_resource_id: int, db: SessionLocal = Depends(get_db)):
+    # Get the reading resource from the database
+    db_reading_resource = db.query(ReadingResource).filter(ReadingResource.id == reading_resource_id).first()
+    if not db_reading_resource:
+        raise HTTPException(status_code=404, detail="ReadingResource not found")
+
+    # Delete the reading resource
+    db.delete(db_reading_resource)
+    db.commit()
+
+    return {"message": f"ReadingResource {reading_resource_id} deleted successfully"}
