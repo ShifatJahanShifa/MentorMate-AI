@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import CategoryDetail from "./pages/CategoryDetail";
 import ScrollToTop from "./utils/ScrollToTop";
 import FoodDetail from "./pages/FoodDetail";
+import Profile from "./pages/Profile";
 
 
 import "./index.css";
@@ -18,8 +19,9 @@ const App = () => {
         <Nav />
         <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/category/:category_name" element={<CategoryDetail />} />
+        <Route path="/category/:category_name/:sub_id" element={<CategoryDetail />} />
         <Route path="/detail/:id" element={<FoodDetail />} />
+        <Route path="/profile" element={<Profile />} />
         </Routes>
         
         <Footer />

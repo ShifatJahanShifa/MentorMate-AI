@@ -1,6 +1,6 @@
 
-import { dine_24,dine_25,dine_26,dine_27,bill1 ,s11,s22,s33,s4} from "../images";
-
+import { dine_24,dine_25,dine_26,dine_27,bill1 ,s11,s22,s33,s4,b1} from "../images";
+import {p1,p2,p3} from "../pdf";
 export const navLinks = [
     { href: "/", label: "Home" },
     { href: "/newsletter", label: "Newsletter" },
@@ -8,11 +8,30 @@ export const navLinks = [
     { href: "/profile", label: "Profile" },
 ];
 
+export const books = [
+    
+    {
+        id: 1,
+        name: 'Energy Efficiency Handbook',
+        topic: 'Physics',
+        image: b1,
+        pdf: p1,
+    },
+    {
+        id: 2,
+        name: 'Energy Efficiency Handbook',
+        topic: 'Physics',
+        image: b1,
+        pdf: p1,
+    }
+];
+
+
 export const categories = [
-    { name: "Chemistry", link: "/category/chemistry", image: s11},
-    { name: "Biology", link: "/category/biology", image: s22},
-    { name: "Physics ", link: "/category/physics", image: s33 },
-    { name: "ICT", link: "/category/ict", image: s4 },
+    { name: "Chemistry", link: "/category/chemistry/1", image: s11, sub_id:1},
+    { name: "Biology", link: "/category/biology/2", image: s22, sub_id:2 },
+    { name: "Physics ", link: "/category/physics/3", image: s33, sub_id:3 },
+    { name: "ICT", link: "/category/ict/4", image: s4 ,   sub_id:4},
 ];
 
 // food.js (or in your CategoryCard component file)

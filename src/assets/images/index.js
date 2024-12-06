@@ -14,5 +14,6 @@ import s22 from './s22.jpg'
 import s33 from './s33.jpg'
 import s4 from './s4.jpg'
 import bill2 from './bill2.png'
+import b1 from './b1.jpg'
 
-export { headerLogo, b,c, dine_24, dine_25, dine_26, dine_27,d1, cake_bill ,bill1,a, s11, s22, s33,s4 ,bill2}
+export { headerLogo, b1, b,c, dine_24, dine_25, dine_26, dine_27,d1, cake_bill ,bill1,a, s11, s22, s33,s4 ,bill2}

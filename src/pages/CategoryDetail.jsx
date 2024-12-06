@@ -59,7 +59,7 @@ const CategoryDetail = () => {
               >
                 <div className="flex items-center">
                   <i className="fas fa-solid fa-earth-americas mr-2"></i>
-                  <span>Green House Effect</span>
+                  <span>Books</span>
                 </div>
                 <i
                   className={`fas fa-chevron-down transition-transform duration-200 ${
@@ -73,7 +73,7 @@ const CategoryDetail = () => {
                     className="block p-2 hover:bg-[#e09a82] cursor-pointer"
                     onClick={() => setSelectedOption("VideoPlayer")}
                   >
-                    What is Green House Effect?
+                   More resourse
                   </li>
                 </ul>
               )}
@@ -86,7 +86,7 @@ const CategoryDetail = () => {
               >
                 <div className="flex items-center">
                   <i className="fas fa-solid fa-gas-pump mr-2"></i>
-                  <span>Learn through Comics.</span>
+                  <span>Video Material</span>
                 </div>
                 <i
                   className={`fas fa-chevron-down transition-transform duration-200 ${
