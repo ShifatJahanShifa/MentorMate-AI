@@ -36,7 +36,7 @@ if "chat_session" not in st.session_state:
 
 with st.sidebar:
     # if st.button("Go to FastAPI App"):
-        st.markdown("[Back](http://localhost:4000)")
+        st.markdown("[Back](http://localhost:5174)")
 
 
 # Display the chatbot's title on the page
