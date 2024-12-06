@@ -60,7 +60,6 @@ def user_input(user_question):
 
     similarity_threshold = 0.6
 
-    # Filter documents based on the threshold
     filtered_docs = [doc for doc, score in docs if score >= similarity_threshold]
 
     if not filtered_docs:
